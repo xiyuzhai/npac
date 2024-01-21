@@ -196,9 +196,26 @@ then
 	where $C$ might be as large as $\delta(0)$.
 \end{rmk}
 
-\begin{prop}[]
-	
-\end{prop}
+Consider the following diagram
+\begin{center}
+	\begin{tikzpicture}
+	  % Nodes
+	  \node (Z) at (0,5) {Z};
+	  \node (XGamma) at (0,2) {$X\times \Gamma$};
+	  \node (X) at (-3,0) {X};
+	  \node (Y) at (3,0) {Y};
+
+	  % Arrows
+	  \draw[->] (Z) -- (X) node[midway, left=5pt] {observation}; % Solid arrow from Z to X
+	  \draw[->] (Z) -- (Y) node[midway, right=5pt] {physics}; % Solid arrow from Z to Y
+	  \draw[->] (Z) -- (XGamma) node[midway, right=5pt]{}; % Solid arrow from Z to Y
+	  \draw[->] (XGamma) -- (X) node[midway, right=5pt]{}; % Solid arrow from Z to Y
+	  \draw[->, dashed] (XGamma) -- (Y) node[midway, right=5pt]{}; % Solid arrow from Z to Y
+	  \draw[->, dashed] (X) -- (Y) node[midway, above] {machine learning}; % Dashed arrow from X to Y
+	\end{tikzpicture}
+\end{center}
+
+The diagram suggests that it can be easier to construct a function from $X\times \Gamma$ to $Y$ then from $X$ to $Y$ because of additional information.
 
 \section{Basic Function Properties}
 
@@ -232,5 +249,89 @@ then
 \section{Description of Function Classes}
 
 In machine learning theory, people just refer to function classes as mathematical sets, without further structures. For our purposes, this is not enough. So
+
+\section{Mnist} 
+Here we describe briefly a function in mathematical terms which we believe is the ground truth for the MNIST dataset. Details can be seen in appendix.
+
+We take the convention that the fill of the digits is white and the background is black.
+
+The image is represented by a $[0,1]$-valued $28\times 28$ matrix $I=(I_{ij})_{0\le i\le 27, 0\le j\le 27}$.
+
+\begin{itemize}
+	\item \textbf{digit one of the simplest kind}, which constitutes 95\% of all images of digit one.
+
+A typical image looks like this:
+
+[an image here]
+
+Think about how it's drawn. The person when writing down a digit one like this has an ideal version in mind, a straight line that is almost vertical. So take $\Gamma_1$ to be the set of straight lines with slopes satisfying some easy constraint. Then we should define $\mathfrak{s}(x;\gamma)$ for $\gamma\in \Gamma_1$ such that
+\begin{itemize}
+	\item for "most" points over $\gamma$, it's surrounded by white pixels;
+	\item for "most" non-white pixels, it's away from $\gamma$.
+\end{itemize}
+
+One choice could be
+\begin{equation}
+	\mathfrak{s}(x; \gamma)=a_1\int_{0}^1  \max_{(i,j)\in [27]\times[27]}1_{\|\gamma(t) - (i,j)\|_2 < \epsilon} I_{ij}dt
+	-
+	a_2\sum_{(i,j)\in [27]\times[27]} 1_{I_{ij}< 0.5}\text{dist}((i,j), \gamma)
+\end{equation}
+
+where $\epsilon$ is an appropriate small number and $a_1,a_2>0$ are appropriate coefficients.
+
+In fact the function applies when $\gamma$ is any path, not necessarily a straight line. Formally it is defined over the path space (without basepoint) $\Gamma= M([0,1], [0,1]^2)$.
+
+The dimensionality of the configuration space is 6, which can possibly be reduced to 5.
+
+\item \textbf{digit seven of the simplest kind}.
+
+A typical image looks like this:
+
+[an image here]
+
+Here we consider all continuous $\gamma:[0,2]\to [0,1]^2$ such that $\gamma|_{[0,1]}, \gamma|_{[1,2]}$ are straight line segments. Additionally, there should be some constraint on the positions of $\gamma(0), \gamma(1), \gamma(2)$ such that $\overline{\gamma(0)\gamma(1)}$ is very close to being horizontal, and $\overline{\gamma(1)\gamma(2)}$ should be roughly vertical downward.
+
+The score function $\mathfrak{s}$ is the same.
+
+The dimensionality of the configuration space is 6, which can actually be reduced to 5.
+
+\item \textbf{digit zero}.
+
+We consider smooth curves $\gamma:[0,L]\to [0,1]^2$ with arc length parametrization such that the mean curvature is always nonnegative, i.e.
+\begin{equation}
+	\|\gamma'(t)\|\equiv 1
+\end{equation}
+and
+\begin{equation}
+	\gamma''(t)\times \gamma'(t) \ge 0
+\end{equation}
+
+Additionally, we require that $\gamma(0)$ is very close to $\gamma(L)$.
+
+We should also require that $\gamma$ is nondegenerate, which can be characterized by isoperimetric inequality.
+
+All these $\gamma$ form $\Gamma_0$.
+
+And we still use the same score funtion $\mathfrak{s}$.
+
+\item \textbf{general case}. Fix a graph $G=(V,E)$. Give it a natural topological structure and identify each $e$ with $[0,1]$. For each $e\in E$, we give assign a $\sigma_e$ which is one of the following classes of curves:
+
+\begin{itemize}
+	\item nonconvex but not straight
+	\item nonconcave but not straight
+	\item straight.
+\end{itemize}
+
+We define the total space as
+\begin{equation}
+	\Omega_G = \left\{\gamma\in M(G, [0,1]^2): \forall e\in E, \gamma|_e\in \sigma_e\right\}.
+\end{equation}
+
+Then the configuration space $\Gamma_G$ is a subset of $\Omega_G$ such that it is given by a boolean function $s$ in the sense that
+\begin{equation}
+	1_{\Gamma_G}(\gamma)=s((\gamma(v))_{v\in V},((\gamma|_e'(0), \gamma|_e'(1), \text{dist}(\gamma|_e,\overline{\gamma|_e(0)\gamma|_e(1)})))_{e\in E})
+\end{equation}
+\end{itemize}
+
 
 \end{document}
