@@ -202,16 +202,16 @@ Consider the following diagram
 	  % Nodes
 	  \node (Z) at (0,5) {Z};
 	  \node (XGamma) at (0,2) {$X\times \Gamma$};
-	  \node (X) at (-3,0) {X};
-	  \node (Y) at (3,0) {Y};
+	  \node (X) at (-4,0) {X};
+	  \node (Y) at (4,0) {Y};
 
 	  % Arrows
 	  \draw[->] (Z) -- (X) node[midway, left=5pt] {observation}; % Solid arrow from Z to X
 	  \draw[->] (Z) -- (Y) node[midway, right=5pt] {physics}; % Solid arrow from Z to Y
 	  \draw[->] (Z) -- (XGamma) node[midway, right=5pt]{}; % Solid arrow from Z to Y
 	  \draw[->] (XGamma) -- (X) node[midway, right=5pt]{}; % Solid arrow from Z to Y
-	  \draw[->, dashed] (XGamma) -- (Y) node[midway, right=5pt]{}; % Solid arrow from Z to Y
-	  \draw[->, dashed] (X) -- (Y) node[midway, above] {machine learning}; % Dashed arrow from X to Y
+	  \draw[->, dashed] (XGamma) -- (Y) node[midway, above=2pt]{npac}; % Solid arrow from Z to Y
+	  \draw[->, dashed] (X) -- (Y) node[midway, above] {pac learning}; % Dashed arrow from X to Y
 	\end{tikzpicture}
 \end{center}
 
